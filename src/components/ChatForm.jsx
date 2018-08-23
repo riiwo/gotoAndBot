@@ -20,6 +20,8 @@ export default class ChatForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    if (this.state.value == '')
+      return false;
     new Promise((resolve) => resolve(
       this.props.onSendMessage('user', this.state.value)
     )).then(() => {
