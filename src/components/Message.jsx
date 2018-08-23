@@ -2,10 +2,16 @@ import React from 'react';
 import { BotIcon } from './BotIcon';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import sanitizeHtml from 'sanitize-html';
 
 export const Message = (props) => {
   const timestamp = new Date(props.timestamp).toLocaleTimeString();
   const readableTimestamp = timestamp.substring(0, timestamp.length - 3);
+
+  const message = sanitizeHtml(props.message, {
+    allowedTags: ['b', 'i', 'em', 'strong', 'br'],
+    allowedAttributes: {}
+  });
 
   return (
     <div className={`row ${props.recipient}`}>
@@ -19,9 +25,14 @@ export const Message = (props) => {
             { readableTimestamp }
           </div>
         </div>
-        <div className="message-box">
-          { props.message ? props.message : <FontAwesomeIcon icon="spinner" className="fa-spin"/> }
-        </div>
+        {
+          props.message ?
+            <div className="message-box"
+                 dangerouslySetInnerHTML={{ __html: message }} /> :
+            <div className="message-box">
+              <FontAwesomeIcon icon="spinner" className="fa-spin"/>
+            </div>
+        }
       </div>
     </div>
   )

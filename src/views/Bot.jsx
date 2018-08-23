@@ -10,7 +10,19 @@ import { ActionCreators } from '../actions';
 class Bot extends Component {
 
   componentDidMount() {
-    this.props.onSendMessage('bot', 'Hello there!');
+    this.props.onSendMessage(
+      'bot',
+      "This is <b>gotoAndBot!</b> <br>" +
+      "Please enter your requests in free form <br>" +
+      "I can do following: <br>"+
+      "  - Greet you <br>"+
+      "  - Tell you my age <br>"+
+      "  - Make calculations with +, -, /, * <br>"+
+      "  - Tell you time at the moment and in many other countries <br>"+
+      "  - Convert currencies (Use ISO 4217: EUR, USD etc.)<br>"+
+      "  - Tell you the weather in many cities (Use capital case for cities) <br>"+
+      "Have fun!"
+    );
   }
 
   render() {

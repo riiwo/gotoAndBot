@@ -20,11 +20,11 @@ export default class ChatForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log('Fire');
     new Promise((resolve) => resolve(
       this.props.onSendMessage('user', this.state.value)
     )).then(() => {
       messageMapper({ input: this.state.value });
+      this.setState({ value: '' });
     });
   }
 

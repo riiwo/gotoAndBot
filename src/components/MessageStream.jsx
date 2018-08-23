@@ -7,6 +7,10 @@ import { Message } from './Message';
 
 class MessageStream extends React.Component {
 
+  componentDidUpdate() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+
   render() {
     const messages = this.props.messages;
 

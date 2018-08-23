@@ -21,6 +21,10 @@ body, html {
   flex: 1;
   padding-top: 95px;
   padding-bottom: 95px;
+  @media all and (max-width: $phone-width) {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
 }
 
 .row {
@@ -48,7 +52,6 @@ body, html {
       font-stretch: normal;
       line-height: normal;
       letter-spacing: 0.2px;
-      text-align: center;
       color: $primary-colour;
       height: 20px;
     }
@@ -91,6 +94,10 @@ body, html {
         font-size: 12px;
       }
     }
+    @media all and (max-width: $phone-width) {
+      max-width: 90%;
+      margin-bottom: 20px;
+    }
   }
   .message-box {
     position: relative;
@@ -102,15 +109,25 @@ body, html {
     min-height: 25px;
     line-height: 25px;
     padding: 10px 15px;
-    text-align: center;
+    align-items: center;
     &:after {
       content: '';
       position: absolute;
-      top: 50%;
+      top: 23px;
       width: 0;
       height: 0;
       border: 4px solid transparent;
       margin-top: -4px;
+    }
+    @media all and (max-width: $phone-width) {
+      padding: 5px 15px;
+    }
+  }
+  @media all and (max-width: $phone-width) {
+    padding-left: 20px;
+    padding-right: 20px !important;
+    .image-column {
+      display: none;
     }
   }
 }
@@ -119,6 +136,7 @@ body, html {
   justify-content: flex-end;
   padding-right: 30px;
   .message-column {
+    align-items: flex-end;
     .info-row {
       flex-direction: row-reverse;
       .info-name {
@@ -151,6 +169,7 @@ body, html {
     margin: 28px 15px 12px 25px;
   }
   .message-column {
+    align-items: flex-start;
     .info-row {
       flex-direction: row;
       .info-name {
@@ -206,6 +225,7 @@ body, html {
     padding: 20px;
     line-height: 20px;
     font-weight: 100;
+    background-color: transparent;
     cursor: pointer;
     &:focus {
       outline: none;
@@ -216,7 +236,7 @@ body, html {
 @keyframes slide-up {
   0% {
     opacity: 0;
-    transform: translateY(300px);
+    transform: translateY(50px);
   }
   100% {
     opacity: 1;

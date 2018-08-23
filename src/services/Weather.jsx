@@ -23,7 +23,7 @@ export function getWeather({ input }, timestamp) {
       store.dispatch(
         ActionCreators.updateMessage(
           timestamp,
-          "Weather in " + name + ": " + first(weather).main + ". " +
+          "Weather in <b>" + name + "</b>: " + first(weather).main + ". " +
           " Temperature is " + temp + " degrees Celcius. Humidity is " + humidity + "% and wind blows " + speed + "m/s"
         )
       );
