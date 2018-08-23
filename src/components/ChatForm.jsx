@@ -15,7 +15,7 @@ export default class ChatForm extends React.Component {
 
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({ value: event.target.value });
   }
 
   handleSubmit(event) {
