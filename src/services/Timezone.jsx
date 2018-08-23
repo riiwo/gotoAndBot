@@ -4,6 +4,7 @@ import moment from 'moment-timezone';
 import { map, forEach, first, last } from 'lodash';
 
 const timeStrings = ['time', 'moment', 'clock'];
+const negativeCurrentTimeStrings = ['in'];
 const countries = {};
 const countryNames = [];
 const timezones = {};
@@ -33,8 +34,10 @@ export function timezone({ input }) {
     const tzMatches = map(timezoneMatches, (match) => timezones[match.toLowerCase()])
     console.log(tzMatches);
     return test(tzMatches);
-  } else {
+  } else if (stringMatcher(input, negativeCurrentTimeStrings).length == 0) {
     return "It is <b>" + new Date().toLocaleTimeString() + "</b> right now.";
+  } else {
+    return "I don't know the time there.";
   }
 }
 

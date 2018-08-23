@@ -25,6 +25,8 @@ function answer(props) {
     return converCurrency;
   } else if (ageAble(props)) {
     return age();
+  } else if(props.input === 'vaal') {
+    return ('<br><br><br><br> &nbsp; o____________________o')
   } else {
     return "I don't know how to answer to that. ☹";
   }
