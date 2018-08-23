@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Receiver from '../services/Receiver';
+import messageMapper from '../services/MessageMapper';
 
 export default class ChatForm extends React.Component {
 
@@ -21,7 +21,11 @@ export default class ChatForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     console.log('Fire');
-    console.log(Receiver({ input: this.state.value }));
+    new Promise((resolve) => resolve(
+      this.props.onSendMessage('user', this.state.value)
+    )).then(() => {
+      messageMapper({ input: this.state.value });
+    });
   }
 
   render() {

@@ -23,12 +23,4 @@ const mapStateToProps = (state) => {
   return state.messages;
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSendMessage: (message) => {
-      dispatch(ActionCreators.sendMessage('user', message))
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MessageStream);
+export default connect(mapStateToProps, {})(MessageStream);

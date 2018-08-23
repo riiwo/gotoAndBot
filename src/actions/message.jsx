@@ -1,12 +1,14 @@
 import * as types from '../config/types';
 
-export default function sendMessage(from, message, action) {
+export function sendMessage(from, actionOrMessage, props) {
+  const timestamp = new Date().getTime();
+  const isAction = typeof actionOrMessage === 'function';
   return (dispatch, _getState) => {
-    dispatch(messageStarted());
+    dispatch(messageStarted(from, timestamp));
     return new Promise((resolve) => resolve(
-      action
+      dispatch(messageFinished(from, !isAction && actionOrMessage, timestamp))
     )).then(() => {
-      dispatch(messageFinished(from, message));
+      isAction && actionOrMessage(props, timestamp);
     }).catch((ex) => {
       dispatch(messageFailed());
       console.log(ex);
@@ -14,19 +16,28 @@ export default function sendMessage(from, message, action) {
   };
 }
 
-function messageStarted() {
+export function updateMessage(timestamp, message) {
+  return {
+    type:  types.MESSAGE_UPDATED,
+    message,
+    timestamp
+  }
+}
+
+function messageStarted(from, timestamp) {
   return {
     type: types.MESSAGE_STARTED,
+    from,
+    timestamp
   };
 }
 
-function messageFinished(response, amount, fromCurrency, toCurrency) {
+function messageFinished(from, message, timestamp) {
   return {
     type: types.MESSAGE_FINISHED,
-    response,
-    amount,
-    fromCurrency,
-    toCurrency
+    from,
+    message,
+    timestamp
   };
 }
 

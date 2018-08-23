@@ -10,8 +10,7 @@ import { ActionCreators } from '../actions';
 class Bot extends Component {
 
   componentDidMount() {
-    console.log(this.props);
-    this.props.onSendMessage('bot', 'Hello there!', null);
+    this.props.onSendMessage('bot', 'Hello there!');
   }
 
   render() {
@@ -19,21 +18,19 @@ class Bot extends Component {
       <div className="app">
         <Header />
         <MessageStream />
-        <ChatForm />
+        <ChatForm onSendMessage={ this.props.onSendMessage }/>
       </div>
     );
   }
 
 }
 
-const mapStateToProps = (state) => {
-  return state.currencies;
-};
-
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSendMessage: (from, message, action) => { dispatch(ActionCreators.sendMessage(from, message, action)) }
+    onSendMessage: (from, actionOrMessage, props = {}) => {
+      dispatch(ActionCreators.sendMessage(from, actionOrMessage, props))
+    }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Bot);
+export default connect(null, mapDispatchToProps)(Bot);

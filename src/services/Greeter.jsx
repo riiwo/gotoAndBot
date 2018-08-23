@@ -1,16 +1,14 @@
-import React from 'react';
-
 import { sample } from 'lodash';
+import { stringMatcher } from './Matchers';
 
 const possibleInputs = ['Hello', 'Hi']
-const possibleAnswers = ['Hello!', 'What\'s up!', 'Hi!'];
+const possibleAnswers = ['Hello!', 'What\'s up!', 'Hi!', 'How do you do!', 'Howdy'];
 
-export const Greetable = ({ input }) => {
-  const pattern = "^" + possibleInputs.join('|');
-  return !!input.match(new RegExp(pattern, 'i'));
+export function greetable({ input }) {
+  return stringMatcher(input, possibleInputs).length > 0
 }
 
-export const Greet = () => {
+export function greet() {
   return sample(possibleAnswers);
 }
 

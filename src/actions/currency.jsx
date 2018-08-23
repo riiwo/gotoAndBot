@@ -1,7 +1,7 @@
 import * as types from '../config/types';
 import Api from '../config/apis/currencyApi';
 
-export default function convert(amount, fromCurrency, toCurrency) {
+export function convert(amount, fromCurrency, toCurrency) {
   return (dispatch, getState) => {
     dispatch(convertStarted());
     return Api.get(`/convert`, { q: `${fromCurrency}_${toCurrency}`, compact: 'ultra' }).then(resp => {

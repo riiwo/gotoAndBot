@@ -1,6 +1,8 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import store from '../config/store';
 import { ActionCreators } from '../actions';
+import { first, round } from 'lodash';
+
+import { stringMatcher, numberMatcher } from './Matchers';
 
 const supportedCurrencies = [
   'ALL', 'XCD', 'EUR', 'BBD', 'BTN', 'BND', 'XAF', 'CUP', 'USD', 'FKP', 'GIP', 'HUF', 'IRR', 'JMD', 'AUD', 'LAK', 'LYD',
@@ -15,29 +17,56 @@ const supportedCurrencies = [
   'ZMW', 'BTC', 'BYN'
 ];
 
-export const CurrencyConvertable = ({ input }) => {
-  const pattern = "^" + supportedCurrencies.join('|');
-  let matches = input.match(new RegExp(pattern, 'gi'));
-  console.log(matches.count);
-  return matches && matches.count >= 2
+export function currencyConvertable({ input }) {
+  const matches = stringMatcher(input, supportedCurrencies);
+  return matches.length >= 2
 };
 
-const mapStateToProps = (state) => {
-  return state.currencies;
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onConvert: (amount, fromCurrency, toCurrency) => {
-      dispatch(ActionCreators.convert(amount, fromCurrency, toCurrency))
-    }
-  };
-};
-
-export const ConverCurrency = connect(mapStateToProps, mapDispatchToProps)(({ input }) => {
+export function converCurrency({ input }, timestamp) {
+  const { error, conversionRates } = store.getState().currencies;
+  const matches = stringMatcher(input, supportedCurrencies);
+  const strings = input.split(first(matches), 2);
   let amount = 1;
-  let fromCurrency = 'USD'
-  let toCurrency = 'EUR'
-  const pattern = "([\d\.]+)?.+?(?=(" + supportedCurrencies.join('|') + "|[\d\.]+))"
-  return this.props.onConvert(amount, fromCurrency, toCurrency);
-});
+  let fromIndex = 0;
+  strings.forEach((substring, index) => {
+    const numberMatches = numberMatcher(substring);
+    if (numberMatches.length > 0) {
+      amount = first(numberMatches)
+      fromIndex = index;
+      return false;
+    }
+  });
+  const fromCurrency = matches[fromIndex].toUpperCase();
+  const toCurrency = matches[fromIndex === 1 ? 0 : 1].toUpperCase();
+  const currentConersionRate = conversionRates[fromCurrency] && conversionRates[fromCurrency][toCurrency];
+  if (currentConersionRate) {
+    return store.dispatch(
+      ActionCreators.updateMessage(
+        timestamp,
+        message(amount, fromCurrency, toCurrency, currentConersionRate)
+      )
+    );
+  }
+  return new Promise((resolve) => resolve(
+    store.dispatch(ActionCreators.convert(amount, fromCurrency, toCurrency))
+  )).then(() => {
+    const { conversionRates } = store.getState().currencies;
+    const currentConersionRate = conversionRates[fromCurrency] && conversionRates[fromCurrency][toCurrency];
+    if (error && !currentConersionRate) {
+      store.dispatch(ActionCreators.updateMessage(timestamp, "Seems that conversion api is down... Sorry ☹"));
+    } else {
+      store.dispatch(
+        ActionCreators.updateMessage(
+          timestamp,
+          message(amount, fromCurrency, toCurrency, currentConersionRate)
+        )
+      );
+    }
+  });
+};
+
+function message(amount, fromCurrency, toCurrency, rate) {
+  return `${amount} ${fromCurrency} is ${round(rate * amount, 5)} ${toCurrency} at the moment`;
+}
+
+

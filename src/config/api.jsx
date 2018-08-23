@@ -10,7 +10,6 @@ export default class Api {
     return {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache',
       'dataType': 'json'
     };
   }
@@ -34,9 +33,9 @@ export default class Api {
   }
 
   static xhr(route, params, verb) {
-    const url = `${ url() }${ route }`;
+    const url = `${ this.url() }${ route }`;
     let options = Object.assign({ method: verb }, params ? { body: JSON.stringify(params) } : null );
-    options.headers = Api.headers();
+    options.headers = this.headers();
     return fetch(url, options).then( resp => {
       let json = resp.json();
       if (!resp.ok) throw resp;

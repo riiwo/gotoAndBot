@@ -4,8 +4,7 @@ import _ from 'lodash';
 const initialState = {
   error: false,
   fetching: false,
-  conversionRates: {
-  }
+  conversionRates: {}
 };
 
 export default function currencyReducer(state = initialState, action) {
@@ -18,11 +17,20 @@ export default function currencyReducer(state = initialState, action) {
       };
     }
     case types.CONVERT_FINISHED: {
-      console.log(action);
+      const { fromCurrency, toCurrency, response } = action;
+      const rate = response[`${fromCurrency}_${toCurrency}`];
+      let newConversionRates = Object.assign({}, state.conversionRates);
+      if (rate && rate > 0) {
+        newConversionRates[fromCurrency] = { ...newConversionRates[fromCurrency] }
+        newConversionRates[toCurrency] = { ...newConversionRates[fromCurrency] }
+        newConversionRates[fromCurrency][toCurrency] = rate;
+        newConversionRates[toCurrency][fromCurrency] = 1/rate;
+      }
       return {
         ...state,
         error: false,
-        fetching: false
+        fetching: false,
+        conversionRates: newConversionRates
       };
     }
     case types.CONVERT_FAILED: {

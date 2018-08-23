@@ -1,6 +1,8 @@
 import React from 'react';
 import { BotIcon } from './BotIcon';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 export const Message = (props) => {
   const timestamp = new Date(props.timestamp).toLocaleTimeString();
   const readableTimestamp = timestamp.substring(0, timestamp.length - 3);
@@ -18,7 +20,7 @@ export const Message = (props) => {
           </div>
         </div>
         <div className="message-box">
-          { props.message }
+          { props.message ? props.message : <FontAwesomeIcon icon="spinner" className="fa-spin"/> }
         </div>
       </div>
     </div>

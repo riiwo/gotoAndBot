@@ -4,33 +4,19 @@ import _ from 'lodash';
 const initialState = {
   error: false,
   fetching: false,
-  messages: [
-    {
-      recipient: 'user',
-      message: 'Hello',
-      timestamp: 1534891872331
-    },
-    {
-      recipient: 'bot',
-      message: 'Hello there',
-      timestamp: 1534891915199
-    },
-    {
-      recipient: 'user',
-      message: 'what up',
-      timestamp: 1534891923225
-    },
-    {
-      recipient: 'bot',
-      message: 'not much',
-      timestamp: 1534891932300
-    }
-  ]
+  messages: {
+  }
 };
 
 export default function messageReducer(state = initialState, action) {
   switch(action.type) {
     case types.MESSAGE_STARTED: {
+      let messages = Object.assign({}, state.messages);
+      messages[action.timestamp] = {
+        recipient: action.from,
+        message: action.message,
+        timestamp: action.timestamp
+      };
       return {
         ...state,
         error: false,
@@ -38,11 +24,30 @@ export default function messageReducer(state = initialState, action) {
       };
     }
     case types.MESSAGE_FINISHED: {
-      console.log(action);
+      let messages = Object.assign({}, state.messages);
+      messages[action.timestamp] = {
+        recipient: action.from,
+        message: action.message,
+        timestamp: action.timestamp
+      };
       return {
         ...state,
         error: false,
-        fetching: false
+        fetching: false,
+        messages
+      };
+    }
+    case types.MESSAGE_UPDATED: {
+      let messages = Object.assign({}, state.messages);
+      messages[action.timestamp] = {
+        ...messages[action.timestamp],
+        message: action.message
+      };
+      return {
+        ...state,
+        error: false,
+        fetching: false,
+        messages
       };
     }
     case types.MESSAGE_FAILED: {
